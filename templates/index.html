@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSH to VM</title>
+</head>
+<body>
+    <h1>Execute Python Script via SSH</h1>
+    <form id="sshForm">
+        <label for="hostname">Hostname:</label>
+        <input type="text" id="hostname" name="hostname" required><br><br>
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <label for="script_path">Script Path (on VM):</label>
+        <input type="text" id="script_path" name="script_path" required><br><br>
+
+        <button type="submit">Execute</button>
+    </form>
+
+    <h2>Result:</h2>
+    <pre id="result"></pre>
+
+    <script>
+        document.getElementById('sshForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const response = await fetch('/ssh', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('result').textContent = result.success 
+                ? `Output:\n${result.output}` 
+                : `Error:\n${result.error}`;
+        });
+    </script>
+</body>
+</html>
